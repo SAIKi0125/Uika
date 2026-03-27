@@ -1,4 +1,4 @@
-# UIKA 在 Extreme Parkour 上的训练与测试说明
+# UIKA On Extreme Parkour
 
 本仓库是在 `extreme-parkour` 基础上，为 UIKA 四足机器人做的适配版本。
 

@@ -60,11 +60,3 @@ cd legged_gym/legged_gym/scripts
 python check_uika_urdf.py --task uika --headless --num_envs 1
 ```
 
-## 常见问题
-
-- `play/train` 找不到模型：
-  请检查 `--proj_name` 与 `--exptid` 是否和训练时一致，模型路径应在 `legged_gym/logs/<proj_name>/<exptid>/` 下。
-
-- 远程仓库说明：
-  - `origin`：你自己的 GitHub 仓库
-  - `upstream`：原始 `extreme-parkour` 仓库

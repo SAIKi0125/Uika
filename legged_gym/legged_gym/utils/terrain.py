@@ -680,10 +680,20 @@ def parkour_terrain(terrain,
         if i == num_stones - 1:
             dis_x += last_stone_len // 4
             heights = np.tile(np.linspace(-last_incline_height, last_incline_height, stone_width), (last_stone_len, 1)) * pos_neg
-            terrain.height_field_raw[dis_x-last_stone_len//2:dis_x+last_stone_len//2, dis_y-stone_width//2: dis_y+stone_width//2] = heights.astype(int) + dis_z
+            x0 = max(0, dis_x - last_stone_len // 2)
+            x1 = min(terrain.height_field_raw.shape[0], dis_x + last_stone_len // 2)
+            y0 = max(0, dis_y - stone_width // 2)
+            y1 = min(terrain.height_field_raw.shape[1], dis_y + stone_width // 2)
+            if x1 > x0 and y1 > y0:
+                terrain.height_field_raw[x0:x1, y0:y1] = heights[:x1 - x0, :y1 - y0].astype(int) + dis_z
         else:
             heights = np.tile(np.linspace(-incline_height, incline_height, stone_width), (stone_len, 1)) * pos_neg
-            terrain.height_field_raw[dis_x-stone_len//2:dis_x+stone_len//2, dis_y-stone_width//2: dis_y+stone_width//2] = heights.astype(int) + dis_z
+            x0 = max(0, dis_x - stone_len // 2)
+            x1 = min(terrain.height_field_raw.shape[0], dis_x + stone_len // 2)
+            y0 = max(0, dis_y - stone_width // 2)
+            y1 = min(terrain.height_field_raw.shape[1], dis_y + stone_width // 2)
+            if x1 > x0 and y1 > y0:
+                terrain.height_field_raw[x0:x1, y0:y1] = heights[:x1 - x0, :y1 - y0].astype(int) + dis_z
         
         goals[i+1] = [dis_x, dis_y]
 

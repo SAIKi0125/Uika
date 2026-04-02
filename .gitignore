@@ -2,3 +2,8 @@ isaacgym*
 .ipynb_checkpoints/
 .vscode/
 *img
+
+# 用户指定忽略
+AGENTS.md
+UIKA\(1\)/
+wandb/

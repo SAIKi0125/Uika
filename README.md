@@ -46,6 +46,12 @@ python train_uika_flat.py --task uika --proj_name parkour_flat --exptid uika-fla
 python train.py --task uika --proj_name parkour_flat --exptid uika-rough-001 --resume --resumeid uika-flat-001 --num_envs 2048
 ```
 
+蒸馏策略训练：
+
+```bash
+python train.py --task uika --proj_name parkour_flat --exptid uika-distill-001 --resume --resumeid uika-rough-001 --delay --use_camera
+```
+
 ### 策略回放
 
 平地策略回放：

@@ -2,68 +2,88 @@
 
 本仓库是在 `extreme-parkour` 基础上，为 UIKA 四足机器人做的适配版本。
 
-## 仓库里包含什么
-
-- UIKA 机器人资源与 URDF 适配
-- UIKA 任务配置：`legged_gym/legged_gym/envs/uika/uika_parkour_config.py`
-- 平地训练脚本：`legged_gym/legged_gym/scripts/train_uika_flat.py`
-- 平地测试脚本：`legged_gym/legged_gym/scripts/play_uika_flat.py`
-- 诊断脚本：
-  - `legged_gym/legged_gym/scripts/check_uika_urdf.py`
-  - `legged_gym/legged_gym/scripts/play_test.py`
-  - `legged_gym/legged_gym/scripts/urdf_play_test.py`
-
-## 环境安装
-
-推荐直接使用导出的 conda 环境：
+## Installation
 
 ```bash
-conda env create -f requirements/conda/parkour.yml
+conda create -n parkour python=3.8
 conda activate parkour
-```
 
-精简 pip 依赖文件：
-
-```bash
-requirements/parkour-requirements.txt
-```
-
-**PyTorch 版本要求：2.4.1**
-
-```bash
 pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1
 pip install trimesh
+
+git clone git@github.com:SAIKi0125/UIKA-On-Extreme-Parkour.git
+cd UIKA-On-Extreme-Parkour
+
+# Download Isaac Gym binaries from https://developer.nvidia.com/isaac-gym
+cd isaacgym/python && pip install -e .
+cd ../rsl_rl && pip install -e .
+cd ../legged_gym && pip install -e .
+
+pip install "numpy<1.24" pydelatin wandb tqdm opencv-python ipdb pyfqmr flask
 ```
 
-## 训练流程
+## Usage
 
-### 1）先做平地预训练（推荐）
+### 环境变量
 
 ```bash
-cd legged_gym/legged_gym/scripts
+export LD_PRELOAD=/home/saiki/miniconda3/envs/parkour/lib/libpython3.8.so.1.0
+```
+
+### 训练
+
+cd legged_gym/scripts
+
+平地预训练：
+
+```bash
 python train_uika_flat.py --task uika --proj_name parkour_flat --exptid uika-flat-001 --num_envs 2048
 ```
 
-### 2）在正常地形继续训练
+继续在复杂地形训练：
 
 ```bash
-cd legged_gym/legged_gym/scripts
 python train.py --task uika --proj_name parkour_flat --exptid uika-rough-001 --resume --resumeid uika-flat-001 --num_envs 2048
 ```
 
-## 测试与可视化
+### 策略回放
 
-### 平地策略回放
+平地策略回放：
 
 ```bash
-cd legged_gym/legged_gym/scripts
 python play_uika_flat.py --task uika --proj_name parkour_flat --exptid uika-flat-001 --checkpoint 300
 ```
 
-### URDF 站立与接触检查
+### URDF 检查
 
 ```bash
-cd legged_gym/legged_gym/scripts
 python check_uika_urdf.py --task uika --headless --num_envs 1
 ```
 
+## Viewer Usage
+
+IsaacGym 和 Web viewer 均可用。
+
+- `ALT + Mouse Left + Drag`: 移动视角
+- `[]`: 切换上一个/下一个机器人
+- `Space`: 暂停/继续
+- `F`: 切换自由相机和跟随相机
+
+## Arguments
+
+| 参数 | 说明 |
+|------|------|
+| `--task` | 机器人任务名，如 `uika` |
+| `--proj_name` | 项目/实验组名 |
+| `--exptid` | 实验 ID |
+| `--num_envs` | 并行环境数量 |
+| `--device` | 设备，如 `cuda:0`, `cpu` |
+| `--headless` | 无 GUI 运行 |
+| `--resume` | 从检查点恢复训练 |
+| `--resumeid` | 要恢复的实验 ID |
+| `--checkpoint` | 加载的检查点编号，-1 为最新 |
+| `--seed` | 随机种子 |
+| `--no_wandb` | 禁用 wandb 日志 |
+| `--web` | 使用 Web viewer（用于无头机器） |
+
+模型日志保存在 `legged_gym/logs/<proj_name>/<exptid>/`
